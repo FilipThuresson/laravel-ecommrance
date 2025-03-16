@@ -14,7 +14,7 @@ Route::middleware(['auth', 'CheckTestAccount'])->group(function () {
 
 
     Route::prefix('/products')->group(function () {
-        Route::get('/', [ProductsController::class, 'index'])->name('products.index');
+        Route::resource('products', ProductsController::class);
     });
 });
 

@@ -14,7 +14,7 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 </head>
-<body class="bg-base-200 h-screen flex">
+<body class="bg-base-200 h-screen w-screen flex">
     <aside class="w-1/6 bg-base-100 border-base-300 border h-screen">
         <div class="text-3xl h-20 flex items-center justify-center border-b border-base-300">
             <h1>{{ config('app.name') }}</h1>
@@ -36,14 +36,14 @@
         </ul>
     </aside>
 
-    <main class="flex flex-col h-screen w-full">
-        <header class="h-20 flex items-center justify-between w-full px-10">
-            <h2 class="text-2xl">{{ $title }}</h2>
+    <main class="flex flex-col h-screen w-full overflow-x-auto">
+        <header class="h-20 flex items-center justify-between w-5/6 px-10 fixed bg-base-200 z-1">
+            <h2 class="text-2xl w-52">{{ $title }}</h2>
+            <div class="flex-1"></div>
             <livewire:search width="w-1/3"/>
+            <div class="flex-1"></div>
             <div class="flex items-center space-x-4">
-
                 <livewire:notification-indicator />
-
                 <div class="dropdown dropdown-end">
                     <div class="avatar avatar-placeholder" tabindex="0" role="button">
                         <div class="bg-neutral text-neutral-content w-10 rounded-full">
@@ -63,7 +63,7 @@
                 </div>
             </div>
         </header>
-        <div class="px-10">
+        <div class="px-10 mt-20">
             {{ $slot }}
         </div>
     </main>

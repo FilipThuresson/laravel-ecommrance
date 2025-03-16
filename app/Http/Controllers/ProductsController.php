@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductsRequest;
 use App\Http\Requests\UpdateProductsRequest;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 
 class ProductsController extends Controller
 {
@@ -13,7 +14,11 @@ class ProductsController extends Controller
      */
     public function index()
     {
-        //
+        $title = 'Products';
+        $user = Auth::user();
+        $products = Product::paginate(20);
+
+        return view('products.index', compact('title', 'user', 'products'));
     }
 
     /**
