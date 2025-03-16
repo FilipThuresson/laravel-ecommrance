@@ -25,7 +25,7 @@ class Search extends Component
             $this->results = [];
         } else {
             if (auth()->user()->can('view users')) {
-                $this->results = User::where('name', 'like', '%' . $this->search . '%')->get();
+                $this->results = User::where('name', 'like', '%' . $this->search . '%')->limit(5)->get();
             }
         }
 

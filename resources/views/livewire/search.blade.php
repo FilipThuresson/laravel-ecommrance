@@ -12,12 +12,17 @@
     </span>
 
     @if($results && count($results) > 0)
-        <div class="absolute bg-white border mt-2 w-full shadow-md p-2">
-            @foreach($results as $result)
-                <div class="p-2 hover:bg-gray-200 cursor-pointer">
-                    {{ $result->name }}
-                </div>
-            @endforeach
+        <div class="absolute card border-base-100 border w-full mt-2">
+            <div class="p-2">
+                <div class="divider divider-start">Users</div>
+                @foreach($results as $result)
+                    <div class="py-2 px-1 cursor-pointer bg-base-100 my-1 rounded">
+                        {{ $result->name }}
+                    </div>
+                @endforeach
+                <div clasS="divider divider-start">Products</div>
+            </div>
+
         </div>
     @endif
 </div>

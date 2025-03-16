@@ -47,7 +47,7 @@
                         </span>
                 @endif
                 <label class="text-base-content/60 flex items-center gap-2 text-xs">
-                    <input type="checkbox" class="checkbox"> Remember me
+                    <input type="checkbox" class="checkbox" name="remember"> Remember me
                 </label>
                 <div class="card-actions items-center justify-center gap-6">
                     <button class="btn btn-accent">Login</button>

@@ -66,4 +66,13 @@ class User extends Authenticatable
     public function isDeactivated(): bool {
         return $this->deleted_at !== null;
     }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class)->where('read_at', '=', null);
+    }
+
+    public function hasUnreadNotifications() {
+        return $this->notifications->where('read_at', null)->count() > 0;
+    }
 }

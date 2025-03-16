@@ -50,3 +50,13 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+.menu li > *:not(ul):not(.menu-title):not(details):active{
+    @apply bg-accent;
+    @apply text-accent-content;
+}
+
+.menu-active {
+    @apply bg-accent;
+    @apply text-accent-content;
+}
