@@ -11,16 +11,29 @@
         </label>
     </span>
 
-    @if($results && count($results) > 0)
-        <div class="absolute card border-base-100 border w-full mt-2">
+    @if(($products || $users) && (count($users) + count($products) > 0))
+        <div class="absolute card border-base-100 border w-full mt-2 z-1 bg-base-200">
             <div class="p-2">
                 <div class="divider divider-start">Users</div>
-                @foreach($results as $result)
+                @if (count($users) == 0)
+                    <div class="py-2 px-1 cursor-pointer bg-base-100 my-1 rounded text-center">
+                        No users found
+                    </div>
+                @endif
+                @foreach($users as $user)
                     <div class="py-2 px-1 cursor-pointer bg-base-100 my-1 rounded">
-                        {{ $result->name }}
+                        {{ $user->name }}
                     </div>
                 @endforeach
                 <div clasS="divider divider-start">Products</div>
+                @foreach($products as $product)
+                    <a href="{{ route('products.show', $product->id) }}">
+                        <div class="py-2 px-1 cursor-pointer bg-base-100 my-1 rounded">
+                            {{ $product->name }}
+                            <p class="text-xs">Art no: {{ $product->article_no }} | ID: {{ $product->id }}</p>
+                        </div>
+                    </a>
+                @endforeach
             </div>
 
         </div>

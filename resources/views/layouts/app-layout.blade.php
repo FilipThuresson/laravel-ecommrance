@@ -29,7 +29,7 @@
             <li>
                 <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'menu-active' : '' }} flex items-center">
                     <i class="iconoir-cube"></i>
-                    Item 2
+                    Products
                 </a>
             </li>
             <li><a>Item 3</a></li>
@@ -67,6 +67,35 @@
             {{ $slot }}
         </div>
     </main>
+
+    @if(Session::has('error_message'))
+        <div x-data="{ show: true }"
+             x-init="setTimeout(() => show = false, 10000)"
+             x-show="show"
+             x-transition.opacity.duration.1000ms
+             @click="show = false"
+             role="alert"
+             class="alert alert-error absolute bottom-10 right-10 cursor-pointer transition-opacity duration-300 ease-in-out">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{{ Session::get('error_message') }}</span>
+        </div>
+    @endif
+    @if(Session::has('success_message'))
+        <div x-data="{ show: true }"
+             x-init="setTimeout(() => show = false, 10000)"
+             x-show="show"
+             x-transition.opacity.duration.1000ms
+             @click="show = false"
+             role="alert"
+             class="alert alert-success absolute bottom-5 left-5 cursor-pointer transition-opacity duration-300 ease-in-out">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span>{{ Session::get('success_message') }}</span>
+        </div>
+    @endif
     @livewireScripts
 </body>
 </html>

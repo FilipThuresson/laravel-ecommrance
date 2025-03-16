@@ -1,13 +1,15 @@
 <?php
 namespace App\Livewire;
 
+use App\Models\Product;
 use App\Models\User;
 use Livewire\Component;
 
 class Search extends Component
 {
     public $width;
-    public $results = [];
+    public $users = [];
+    public $products = [];
     public $search = '';
 
     public function mount($width = 'w-full')
@@ -22,11 +24,14 @@ class Search extends Component
     public function render()
     {
         if($this->search == ''){
-            $this->results = [];
+            $this->users = [];
+            $this->products = [];
+
         } else {
             if (auth()->user()->can('view users')) {
-                $this->results = User::where('name', 'like', '%' . $this->search . '%')->limit(5)->get();
+                $this->users = User::where('name', 'like', '%' . $this->search . '%')->limit(5)->get();
             }
+            $this->products = Product::where('name', 'like', '%' . $this->search . '%')->orWhere('article_no', 'like', '%'. $this->search . '%')->limit(5)->get();
         }
 
         return view('livewire.search');

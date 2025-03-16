@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('article_no')->nullable();
             $table->integer('price_in_cents');
-            $table->boolean('active');
+            $table->boolean('active')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

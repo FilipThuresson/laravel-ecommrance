@@ -14,7 +14,17 @@ Route::middleware(['auth', 'CheckTestAccount'])->group(function () {
 
 
     Route::prefix('/products')->group(function () {
-        Route::resource('products', ProductsController::class);
+        Route::resource('/', ProductsController::class)
+            ->parameters(['' => 'product'])
+            ->names([
+                'index' => 'products.index',
+                'edit' => 'products.edit',
+                'destroy' => 'products.destroy',
+                'show' => 'products.show',
+                'update' => 'products.update',
+                'store' => 'products.store',
+                'create' => 'products.create',
+            ]);
     });
 });
 

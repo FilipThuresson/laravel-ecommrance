@@ -52,11 +52,11 @@
 }
 
 .menu li > *:not(ul):not(.menu-title):not(details):active{
-    @apply bg-accent;
-    @apply text-accent-content;
+    @apply bg-primary;
+    @apply text-primary-content;
 }
 
 .menu-active {
-    @apply bg-accent;
-    @apply text-accent-content;
+    @apply bg-primary;
+    @apply text-primary-content;
 }
