@@ -1,0 +1,53 @@
+name: Deploy Laravel App
+
+on:
+  push:
+    branches:
+      - main  # Adjust based on your repo
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout latest code
+        uses: actions/checkout@v4
+
+      - name: Set up SSH & Deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            cd /var/www/html/laravel-ecommrance # Change to your project directory
+            
+            echo "Pulling latest code..."
+            sudo git pull origin main  # Use sudo for Git if necessary
+            
+            echo "Enabling Laravel maintenance mode..."
+            sudo php artisan down || true  # Avoid failure if already in maintenance mode
+            
+            echo "Installing Composer dependencies..."
+            sudo composer install --no-dev --optimize-autoloader
+            
+            echo "Running database migrations..."
+            sudo php artisan migrate --force
+            
+            echo "Installing npm dependencies..."
+            sudo npm install
+            
+            echo "Building frontend assets..."
+            sudo npm run build  # Adjust as needed
+            
+            echo "Clearing caches..."
+            sudo php artisan cache:clear
+            sudo php artisan config:clear
+            sudo php artisan route:clear
+            sudo php artisan view:clear
+            
+            echo "Disabling Laravel maintenance mode..."
+            sudo php artisan up
+            
+            echo "Deployment complete!"
