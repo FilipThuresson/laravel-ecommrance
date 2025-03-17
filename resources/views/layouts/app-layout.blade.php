@@ -32,7 +32,12 @@
                     Products
                 </a>
             </li>
-            <li><a>Item 3</a></li>
+            <li>
+                <a>
+                    <i class="iconoir-user"></i>
+                    Users
+                </a>
+            </li>
         </ul>
     </aside>
 
