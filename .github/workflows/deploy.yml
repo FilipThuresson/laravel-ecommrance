@@ -24,30 +24,30 @@ jobs:
             cd /var/www/html/laravel-ecommrance # Change to your project directory
             
             echo "Pulling latest code..."
-            sudo git pull origin main  # Use sudo for Git if necessary
+            git pull origin main  # Use sudo for Git if necessary
             
             echo "Enabling Laravel maintenance mode..."
-            sudo php artisan down || true  # Avoid failure if already in maintenance mode
+            php artisan down || true  # Avoid failure if already in maintenance mode
             
             echo "Installing Composer dependencies..."
-            sudo composer install --no-dev --optimize-autoloader
+            composer install --no-dev --optimize-autoloader
             
             echo "Running database migrations..."
-            sudo php artisan migrate --force
+            php artisan migrate --force
             
             echo "Installing npm dependencies..."
-            sudo npm install
+            npm install
             
             echo "Building frontend assets..."
-            sudo npm run build  # Adjust as needed
+            npm run build  # Adjust as needed
             
             echo "Clearing caches..."
-            sudo php artisan cache:clear
-            sudo php artisan config:clear
-            sudo php artisan route:clear
-            sudo php artisan view:clear
+            php artisan cache:clear
+            php artisan config:clear
+            php artisan route:clear
+            php artisan view:clear
             
             echo "Disabling Laravel maintenance mode..."
-            sudo php artisan up
+            php artisan up
             
             echo "Deployment complete!"
