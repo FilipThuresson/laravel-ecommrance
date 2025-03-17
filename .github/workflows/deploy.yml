@@ -3,7 +3,7 @@ name: Deploy Laravel App
 on:
   push:
     branches:
-      - main  # Adjust based on your repo
+      - main
 
 jobs:
   deploy:
@@ -19,35 +19,41 @@ jobs:
           host: ${{ secrets.SSH_HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
-          port: ${{ secrets.SSH_PORT }}
           script: |
-            cd /var/www/html/laravel-ecommrance # Change to your project directory
-            
-            echo "Pulling latest code..."
-            sudo git pull origin main  # Use sudo for Git if necessary
-            
-            echo "Enabling Laravel maintenance mode..."
-            sudo php artisan down || true  # Avoid failure if already in maintenance mode
-            
-            echo "Installing Composer dependencies..."
+            # Exit on any error
+            set -e
+
+            # Navigate to your Laravel project
+            cd /var/www/html/laravel-ecommrance
+
+            # Add safe directory exception for Git
+            sudo git config --global --add safe.directory /var/www/html/laravel-ecommrance
+
+            # Pull the latest code
+            sudo git pull origin main
+
+            # Enable Laravel maintenance mode
+            sudo php artisan down || true
+
+            # Install Composer dependencies
             sudo composer install --no-dev --optimize-autoloader
-            
-            echo "Running database migrations..."
+
+            # Run database migrations
             sudo php artisan migrate --force
-            
-            echo "Installing npm dependencies..."
+
+            # Install npm dependencies
             sudo npm install
-            
-            echo "Building frontend assets..."
-            sudo npm run build  # Adjust as needed
-            
-            echo "Clearing caches..."
+
+            # Build frontend assets
+            sudo npm run build
+
+            # Clear Laravel caches
             sudo php artisan cache:clear
             sudo php artisan config:clear
             sudo php artisan route:clear
             sudo php artisan view:clear
-            
-            echo "Disabling Laravel maintenance mode..."
+
+            # Disable maintenance mode
             sudo php artisan up
-            
+
             echo "Deployment complete!"
