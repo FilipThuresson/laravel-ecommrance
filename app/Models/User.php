@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -74,5 +75,21 @@ class User extends Authenticatable
 
     public function hasUnreadNotifications() {
         return $this->notifications->where('read_at', null)->count() > 0;
+    }
+
+    public function isActive()
+    {
+        return DB::table('sessions')
+            ->where('user_id', $this->id)
+            ->where('last_activity', '>=', now()->timestamp - config('session.lifetime') * 60)
+            ->exists();
+    }
+
+    public function lastActive()
+    {
+        return DB::table('sessions')
+            ->where('user_id', $this->id)
+            ->orderBy('last_activity', 'desc')
+            ->first();
     }
 }

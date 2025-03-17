@@ -3,6 +3,7 @@
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FirstSetupController;
 use App\Http\Controllers\ProductsController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -24,6 +25,20 @@ Route::middleware(['auth', 'CheckTestAccount'])->group(function () {
                 'update' => 'products.update',
                 'store' => 'products.store',
                 'create' => 'products.create',
+            ]);
+    });
+
+    Route::prefix('/users')->group(function () {
+        Route::resource('/', UserController::class)
+            ->parameters(['' => 'product'])
+            ->names([
+                'index' => 'users.index',
+                'edit' => 'users.edit',
+                'destroy' => 'users.destroy',
+                'show' => 'users.show',
+                'update' => 'users.update',
+                'store' => 'users.store',
+                'create' => 'users.create',
             ]);
     });
 });

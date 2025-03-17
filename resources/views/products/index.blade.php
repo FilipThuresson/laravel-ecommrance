@@ -3,11 +3,11 @@
         {{ $title }}
     </x-slot:title>
     <div>
-
+        @if($user->can('manage products'))
         <div class="w-full flex justify-end">
             <a href="{{ route('products.create') }}" class="btn btn-primary">Create new product</a>
         </div>
-
+        @endif
         <table class="table mt-2">
             <thead>
                 <tr>
@@ -37,10 +37,10 @@
                         <td>{{ $product->created_at }}</td>
                         <td class="flex justify-center gap-1 items-center text-lg">
                             <a href="{{ route('products.show', $product->id) }}" title="view product" class="text-primary"><i class="iconoir-eye"></i></a>
-                            @if($user->can('edit products'))
+                            @if($user->can('manage products'))
                                 <a href="{{ route('products.edit', $product->id) }}" title="edit product"><i class="iconoir-edit-pencil"></i></a>
                             @endif
-                            @if($user->can('delete products'))
+                            @if($user->can('manage products'))
                                 <a title="delete product" class="text-error" onclick="product_{{$product->id}}_delete.showModal()"><i class="iconoir-trash"></i></a>
                                 <dialog id="product_{{$product->id}}_delete" class="modal">
                                     <div class="modal-box">

@@ -28,7 +28,13 @@ class ProductsController extends Controller
      */
     public function create()
     {
-        //
+        if (!auth()->user()->can('manage product')) {
+            Session::flash('error_message', 'You do not have permission to edit products');
+            return back();
+        }
+
+        $title = "Create a new product";
+        return view('products.edit', compact('product', 'title'));
     }
 
     /**
@@ -52,7 +58,7 @@ class ProductsController extends Controller
      */
     public function edit(Product $product)
     {
-        if (!auth()->user()->can('edit product')) {
+        if (!auth()->user()->can('manage product')) {
             Session::flash('error_message', 'You do not have permission to edit products');
             return back();
         }
@@ -74,7 +80,7 @@ class ProductsController extends Controller
      */
     public function destroy(Product $product)
     {
-        if (!auth()->user()->can('edit product')) {
+        if (!auth()->user()->can('manage product')) {
             Session::flash('error_message', 'You do not have permission to delete products');
             return redirect(route('products.index'));
         }

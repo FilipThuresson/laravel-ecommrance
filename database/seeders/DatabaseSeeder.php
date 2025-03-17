@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
 
         Role::create(['name' => 'super admin']);
 
-        Permission::create(['name' => 'edit products']);
+        Permission::create(['name' => 'manage products']);
 
         $user = User::find(1);
         $user->assignRole('super admin');

@@ -22,22 +22,24 @@
         <ul class="menu bg-base-100 w-full gap-2">
             <li>
                 <a href="{{ route('dashboard.index') }}" class="{{ request()->routeIs('dashboard.*') ? 'menu-active' : '' }} flex items-center">
-                    <i class="iconoir-stats-up-square"></i>
+                    <i class="iconoir-stats-up-square text-xl"></i>
                     Dashboard
                 </a>
             </li>
             <li>
                 <a href="{{ route('products.index') }}" class="{{ request()->routeIs('products.*') ? 'menu-active' : '' }} flex items-center">
-                    <i class="iconoir-cube"></i>
+                    <i class="iconoir-cube text-xl"></i>
                     Products
                 </a>
             </li>
+            @if(auth()->user()->can('manage users'))
             <li>
-                <a>
-                    <i class="iconoir-user"></i>
+                <a href="{{ route('users.index') }}" class="{{ request()->routeIs('users.*') ? 'menu-active' : '' }} flex items-center">
+                    <i class="iconoir-user text-xl"></i>
                     Users
                 </a>
             </li>
+            @endif
         </ul>
     </aside>
 
