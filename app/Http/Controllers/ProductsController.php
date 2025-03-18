@@ -34,7 +34,7 @@ class ProductsController extends Controller
         }
 
         $title = "Create a new product";
-        return view('products.edit', compact('product', 'title'));
+        return view('products.create', compact('title'));
     }
 
     /**
