@@ -45,8 +45,7 @@
 
     <main class="flex flex-col h-screen w-full overflow-x-auto">
         <header class="h-20 flex items-center justify-between w-5/6 px-10 fixed bg-base-200 z-1">
-            <h2 class="text-2xl w-52">{{ $title }}</h2>
-            <div class="flex-1"></div>
+            <h2 class="text-2xl flex-1">{{ $title }}</h2>
             <livewire:search width="w-1/3"/>
             <div class="flex-1"></div>
             <div class="flex items-center space-x-4">
@@ -70,7 +69,7 @@
                 </div>
             </div>
         </header>
-        <div class="px-10 mt-20">
+        <div class="px-10 mt-20 h-full">
             {{ $slot }}
         </div>
     </main>
