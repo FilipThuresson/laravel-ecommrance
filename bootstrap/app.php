@@ -18,5 +18,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
-        Integration::handles($exceptions);
+        if (config('app.env') === 'production') {
+            Integration::handles($exceptions);
+        }
     })->create();
