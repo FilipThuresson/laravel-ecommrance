@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="dim">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="lofi">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -59,7 +59,7 @@
                     <ul tabindex="0" class="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm mt-2">
                         <li><a>Item 1</a></li>
                         <li><a>Item 2</a></li>
-                        <li><a>Item 3</a></li>
+                        <li><button onclick="toggleTheme()">Toggle Theme</button></li>
                         <div class="divider m-1"></div>
                         <form action="{{ route('logout') }}" method="post">
                             @csrf
@@ -67,6 +67,12 @@
                         </form>
                     </ul>
                 </div>
+                <label class="swap swap-rotate text-xl">
+                    <!-- this hidden checkbox controls the state -->
+                    <input type="checkbox" onclick="toggleTheme()"/>
+                    <i class="iconoir-sun-light swap-on text-yellow-200" id="sun"></i>
+                    <i class="iconoir-half-moon swap-off text-black" id="moon"></i>
+                </label>
             </div>
         </header>
         <div class="px-10 mt-20 h-full">
@@ -82,9 +88,7 @@
              @click="show = false"
              role="alert"
              class="alert alert-error absolute bottom-10 right-10 cursor-pointer transition-opacity duration-300 ease-in-out">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <i class="iconoir-xmark-circle"></i>
             <span>{{ Session::get('error_message') }}</span>
         </div>
     @endif
@@ -96,9 +100,7 @@
              @click="show = false"
              role="alert"
              class="alert alert-success absolute bottom-5 left-5 cursor-pointer transition-opacity duration-300 ease-in-out">
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 shrink-0 stroke-current" fill="none" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-            </svg>
+            <i class="iconoir-check-circle"></i>
             <span>{{ Session::get('success_message') }}</span>
         </div>
     @endif

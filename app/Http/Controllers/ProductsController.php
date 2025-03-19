@@ -42,7 +42,8 @@ class ProductsController extends Controller
      */
     public function store(StoreProductsRequest $request)
     {
-        //
+        Product::create($request->validated());
+        return redirect()->back()->with('success_message', 'Product added successfully!');
     }
 
     /**

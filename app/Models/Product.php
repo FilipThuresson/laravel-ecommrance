@@ -10,6 +10,18 @@ class Product extends Model
 {
     use SoftDeletes, HasFactory;
     protected $fillable = [
-        'name', 'article_no', 'price_in_cents'
+        'name', 'article_no', 'price', 'description', 'short_description', 'active'
     ];
+
+
+    public function getPriceAttribute()
+    {
+        return $this->price_in_cents / 100;
+    }
+
+    // Set price in cents when saving
+    public function setPriceAttribute($value)
+    {
+        $this->attributes['price_in_cents'] = $value * 100;
+    }
 }
