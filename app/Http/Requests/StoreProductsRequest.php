@@ -25,7 +25,6 @@ class StoreProductsRequest extends FormRequest
             'name' => 'required|string|max:255',
             'article_no' => 'nullable|string|unique:products,article_no|max:255',
             'price' => 'required|min:0',
-            'active' => 'boolean',
             'description' => 'nullable|string',
             'short_description' => 'nullable|string|max:500',
         ];
