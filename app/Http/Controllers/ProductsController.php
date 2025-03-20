@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreProductsRequest;
 use App\Http\Requests\UpdateProductsRequest;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -42,7 +43,19 @@ class ProductsController extends Controller
      */
     public function store(StoreProductsRequest $request)
     {
-        Product::create($request->validated());
+        $product = Product::create($request->validated());
+
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $file) {
+                $path = $file->store('products', 'public');
+                $product_image = new ProductImage();
+                $product_image->product_id = $product->id;
+                $product_image->path = $path;
+                $product_image->user_id = Auth::id();
+                $product_image->save();
+            }
+        }
+
         return redirect()->back()->with('success_message', 'Product added successfully!');
     }
 
