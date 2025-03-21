@@ -24,4 +24,8 @@ class Product extends Model
     {
         $this->attributes['price_in_cents'] = $value * 100;
     }
+
+    public function images() {
+        return $this->hasMany(ProductImage::class, 'product_id', 'id')->orderBy('show_order');
+    }
 }

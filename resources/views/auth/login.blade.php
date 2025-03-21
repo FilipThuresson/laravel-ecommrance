@@ -44,7 +44,7 @@
                     <span class="text-base-content/60 flex items-center gap-2 px-1 text-[0.6875rem] text-error">
                             <span class="status status-error inline-block"></span>
                             {{ $errors->first() }}
-                        </span>
+                    </span>
                 @endif
                 <label class="text-base-content/60 flex items-center gap-2 text-xs">
                     <input type="checkbox" class="checkbox" name="remember"> Remember me

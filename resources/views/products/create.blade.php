@@ -9,7 +9,7 @@
             <div class="w-full flex justify-between items-center">
                 <span class="flex gap-2">
                     <button class="btn btn-primary">Save</button>
-                    <button class="btn btn-primary">Save & exit</button>
+                    <button class="btn btn-primary" name="save_exit" value="1">Save & exit</button>
                 </span>
                 <a href="{{ route('products.index') }}" class="btn btn-error">Back</a>
             </div>
@@ -48,42 +48,78 @@
                             <label class="label">
                                 <span class="label-text">Name</span>
                             </label>
-                            <input type="text" name="name" class="input input-bordered w-full" placeholder="Product Name">
+                            <input type="text" name="name" class="input input-bordered w-full" placeholder="Product Name" value="{{ old('name') }}">
+                            <span class="text-base-content/60 flex items-center gap-2 px-1 text-[0.6875rem] text-error">
+                                @error('name')
+                                <span class="status status-error inline-block"></span>
+                                {{ $message }}
+                                @enderror
+                            </span>
                         </div>
 
                         <div class="form-control mt-2">
                             <label class="label">
                                 <span class="label-text">Article No</span>
                             </label>
-                            <input type="text" name="article_no" class="input input-bordered w-full" placeholder="Unique Article Number">
+                            <input type="text" name="article_no" class="input input-bordered w-full" placeholder="Unique Article Number" value="{{ old('article_no') }}">
+                            <span class="text-base-content/60 flex items-center gap-2 px-1 text-[0.6875rem] text-error">
+                                @error('article_no')
+                                <span class="status status-error inline-block"></span>
+                                {{ $message }}
+                                @enderror
+                            </span>
                         </div>
 
                         <div class="form-control mt-2">
                             <label class="label">
                                 <span class="label-text">Price</span>
                             </label>
-                            <input type="number" name="price" step="0.01" class="input input-bordered w-full" placeholder="Enter Price">
+                            <input type="number" name="price" step="0.01" class="input input-bordered w-full" placeholder="Enter Price" value="{{ old('price') }}">
+                            <span class="text-base-content/60 flex items-center gap-2 px-1 text-[0.6875rem] text-error">
+                                @error('price')
+                                <span class="status status-error inline-block"></span>
+                                {{ $message }}
+                                @enderror
+                            </span>
                         </div>
 
                         <div class="form-control mt-2">
                             <label class="cursor-pointer flex items-center gap-2">
-                                <input type="checkbox" name="active" class="toggle" checked>
+                                <input type="checkbox" name="active" class="toggle" @checked(old('active')) />
                                 <span class="label-text">Active</span>
                             </label>
+                            <span class="text-base-content/60 flex items-center gap-2 px-1 text-[0.6875rem] text-error">
+                                @error('active')
+                                <span class="status status-error inline-block"></span>
+                                {{ $message }}
+                                @enderror
+                            </span>
                         </div>
 
                         <div class="form-control mt-2">
                             <label class="label">
                                 <span class="label-text">Short Description</span>
                             </label>
-                            <textarea name="short_description" class="textarea textarea-bordered w-full resize-none" rows="10" placeholder="Short Summary"></textarea>
+                            <textarea name="short_description" class="textarea textarea-bordered w-full resize-none" rows="10" placeholder="Short Summary">{{ old('short_description') }}</textarea>
+                            <span class="text-base-content/60 flex items-center gap-2 px-1 text-[0.6875rem] text-error">
+                                @error('short_description')
+                                <span class="status status-error inline-block"></span>
+                                {{ $message }}
+                                @enderror
+                            </span>
                         </div>
 
                         <div class="form-control mt-2">
                             <label class="label">
                                 <span class="label-text">Description</span>
                             </label>
-                            <textarea name="description" class="textarea textarea-bordered w-full resize-none" rows="15" placeholder="Product Description"></textarea>
+                            <textarea name="description" class="textarea textarea-bordered w-full resize-none" rows="15" placeholder="Product Description">{{ old('description') }}</textarea>
+                            <span class="text-base-content/60 flex items-center gap-2 px-1 text-[0.6875rem] text-error">
+                                @error('description')
+                                <span class="status status-error inline-block"></span>
+                                {{ $message }}
+                                @enderror
+                            </span>
                         </div>
                     </div>
                     <div x-show="activeTab === 2">
@@ -98,6 +134,12 @@
                                 <p class="text-gray-600">Drop files here or click to select</p>
                                 <input type="file" name="files[]" multiple class="hidden" x-ref="fileInput" @change="selectFiles" accept="image/*">
                             </div>
+                            <span class="text-base-content/60 flex items-center gap-2 px-1 text-[0.6875rem] text-error">
+                                @error('files.*')
+                                <span class="status status-error inline-block"></span>
+                                {{ $message }}
+                                @enderror
+                            </span>
 
                             <!-- Image Previews with Remove Button -->
                             <div class="mt-4 flex flex-wrap gap-4">
@@ -121,15 +163,6 @@
                 </div>
             </div>
         </form>
-        @if ($errors->any())
-            <div class="alert alert-danger">
-                <ul>
-                    @foreach ($errors->all() as $error)
-                        <li>{{ $error }}</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endif
     </div>
     @push('scripts')
         <script>
