@@ -31,7 +31,7 @@ class Search extends Component
             if (auth()->user()->can('view users')) {
                 $this->users = User::where('name', 'like', '%' . $this->search . '%')->limit(5)->get();
             }
-            $this->products = Product::where('name', 'like', '%' . $this->search . '%')->orWhere('article_no', 'like', '%'. $this->search . '%')->limit(5)->get();
+            $this->products = Product::where('name', 'like', '%' . $this->search . '%')->orWhere('article_no', 'like', '%'. $this->search . '%')->orWhere('id', 'like', $this->search)->limit(5)->get();
         }
 
         return view('livewire.search');
