@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout latest code
         uses: actions/checkout@v4
@@ -37,7 +37,7 @@ jobs:
             sudo php artisan down || true
 
             # Install Composer dependencies
-            sudo composer install --no-dev --optimize-autoloader
+            composer install --no-dev --optimize-autoloader
 
             # Run database migrations
             sudo php artisan migrate --force
