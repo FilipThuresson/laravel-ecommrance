@@ -94,8 +94,51 @@ class ProductsController extends Controller
      */
     public function update(UpdateProductsRequest $request, Product $product)
     {
-        //
+        $data = $request->validated();
+        $data['active'] = $request->has('active') ? true : false;
+        $product->update($data);
+
+        // Handle removed images
+        if ($request->post('removed_images')) {
+            foreach ($request->post('removed_images') as $image_id) {
+                $product_image = ProductImage::find($image_id);
+                if ($product_image && $product_image->product_id === $product->id) {
+                    $product_image->delete();
+                }
+            }
+        }
+
+        // Handle existing images' order
+        if ($request->has('image_ids')) {
+            foreach ($request->post('image_ids') as $index => $imageId) {
+                if ($imageId) {
+                    $product_image = ProductImage::find($imageId);
+                    if ($product_image && $product_image->product_id === $product->id) {
+                        $product_image->show_order = $request->post('image_orders')[$index];
+                        $product_image->save();
+                    }
+                }
+            }
+        }
+
+        // Handle new image uploads
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $index => $file) {
+                $path = $file->store('products', 'public');
+                $order = $request->post('image_orders')[$index] ?? ($product->images()->max('show_order') + 1);
+
+                $product_image = new ProductImage();
+                $product_image->product_id = $product->id;
+                $product_image->path = $path;
+                $product_image->user_id = Auth::id();
+                $product_image->show_order = $order;
+                $product_image->save();
+            }
+        }
+
+        return redirect()->back()->with('success_message', 'Product updated successfully!');
     }
+
 
     /**
      * Remove the specified resource from storage.

@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class ProductImage extends Model
 {
-    use SoftDeletes;
 
     protected $table = 'product_image';
 

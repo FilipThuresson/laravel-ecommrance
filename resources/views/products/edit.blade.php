@@ -4,8 +4,9 @@
     </x-slot:title>
 
     <div class="px-4">
-        <form action="{{ route('products.store') }}" method="POST" enctype="multipart/form-data">
+        <form action="{{ route('products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
+            @method('PUT')
             <div class="w-full flex justify-between items-center">
                 <span class="flex gap-2">
                     <button class="btn btn-primary">Save</button>
@@ -123,39 +124,38 @@
                         </div>
                     </div>
                     <div x-show="activeTab === 2">
-                        <div x-data="fileUpload()" class="p-4">
-                            <!-- Drag & Drop Box -->
-                            <div
-                                class="border-2 border-dashed p-6 text-center cursor-pointer rounded-lg"
-                                @dragover.prevent
-                                @drop="dropFiles($event)"
-                                @click="$refs.fileInput.click()"
-                            >
-                                <p class="text-gray-600">Drop files here or click to select</p>
-                                <input type="file" name="files[]" multiple class="hidden" x-ref="fileInput" @change="selectFiles" accept="image/*">
-                            </div>
-                            <span class="text-base-content/60 flex items-center gap-2 px-1 text-[0.6875rem] text-error">
-                                @error('files.*')
-                                <span class="status status-error inline-block"></span>
-                                {{ $message }}
-                                @enderror
-                            </span>
+                        <div x-data="imageUploader({ images: {{ \Illuminate\Support\Js::from($product->images->map(fn($img) => [
+                            'id' => $img->id,
+                            'path' => asset('storage/' . $img->path)
+                        ])) }} })">
 
-                            <!-- Image Previews with Remove Button -->
-                            <div class="mt-4 flex flex-wrap gap-4">
-                                <template x-for="(file, index) in files" :key="index">
-                                    <div class="relative w-24 h-24 border rounded-lg overflow-hidden">
-                                        <img :src="file.preview" class="w-full h-full object-cover">
-                                        <button
-                                            @click="removeFile(index)"
-                                            class="absolute top-1 right-1 bg-red-500 text-white text-xs rounded-full px-2 py-1"
-                                        >
-                                            ✕
+                            <div class="flex gap-2 mb-4">
+                                <template x-for="(image, index) in previews" :key="image.id || image.path">
+                                    <div class="relative h-24 border border-base-100 rounded cursor-move"
+                                         draggable="true"
+                                         @dragstart="dragStart($event, index)"
+                                         @dragover="dragOver($event)"
+                                         @drop="drop($event, index)">
+
+                                        <img :src="image.path || image" class="w-full h-full object-cover">
+
+                                        <button type="button" @click="removeImage(index, image)" class="absolute top-0 right-0 text-error p-1">
+                                            <i class="iconoir-trash"></i>
                                         </button>
+
+                                        <input type="hidden" name="image_orders[]" :value="image.order">
+                                        <input type="hidden" name="image_ids[]" :value="image.id || ''">
                                     </div>
                                 </template>
                             </div>
+
+                            <template x-for="id in removedImages" :key="id">
+                                <input type="hidden" name="removed_images[]" :value="id">
+                            </template>
+
+                            <input name="files[]" type="file" multiple @change="handleFileSelect" class="file-input"/>
                         </div>
+
                     </div>
                     <div x-show="activeTab === 3">
 
@@ -166,54 +166,67 @@
     </div>
     @push('scripts')
         <script>
-            function fileUpload() {
+            function imageUploader({ images = [] }) {
                 return {
-                    files: [],
-                    selectFiles(event) {
-                        this.updateFileInput(event.target.files);
-                    },
-                    dropFiles(event) {
-                        this.updateFileInput(event.dataTransfer.files);
-                    },
-                    updateFileInput(newFiles) {
-                        let fileInput = this.$refs.fileInput;
-                        let dataTransfer = new DataTransfer();
+                    previews: images.map((img, index) => ({
+                        id: img.id,
+                        path: img.path,
+                        order: index + 1  // Ensure order is assigned from the start
+                    })),
+                    removedImages: [],
+                    draggedImage: null,
 
-                        // Preserve existing files
-                        Array.from(fileInput.files).forEach(file => dataTransfer.items.add(file));
-
-                        // Add only new unique files and generate previews
-                        Array.from(newFiles).forEach(file => {
-                            if (![...dataTransfer.files].some(existingFile => existingFile.name === file.name && existingFile.size === file.size)) {
-                                file.preview = URL.createObjectURL(file);
-                                dataTransfer.items.add(file);
-                            }
+                    handleFileSelect(event) {
+                        [...event.target.files].forEach((file) => {
+                            let reader = new FileReader();
+                            reader.onload = e => {
+                                this.previews.push({
+                                    id: null,
+                                    path: e.target.result,
+                                    order: this.previews.length + 1 // Assign order dynamically
+                                });
+                                this.updateOrder(); // Ensure correct order after adding
+                            };
+                            reader.readAsDataURL(file);
                         });
-
-                        fileInput.files = dataTransfer.files;
-                        this.syncFileList();
                     },
-                    removeFile(index) {
-                        let fileInput = this.$refs.fileInput;
-                        let dataTransfer = new DataTransfer();
 
-                        // Remove the selected file
-                        this.files.splice(index, 1);
-
-                        // Update the file input with the remaining files
-                        this.files.forEach(file => {
-                            let matchingFile = Array.from(fileInput.files).find(f => f.name === file.name && f.size === file.size);
-                            if (matchingFile) dataTransfer.items.add(matchingFile);
-                        });
-
-                        fileInput.files = dataTransfer.files;
+                    removeImage(index, image) {
+                        if (image.id) {
+                            this.removedImages.push(image.id);
+                        }
+                        this.previews.splice(index, 1);
+                        this.updateOrder(); // Recalculate order after removal
                     },
-                    syncFileList() {
-                        this.files = Array.from(this.$refs.fileInput.files).map(file => ({
-                            name: file.name,
-                            size: file.size,
-                            preview: URL.createObjectURL(file)
+
+                    updateOrder() {
+                        this.previews = this.previews.map((image, index) => ({
+                            ...image,
+                            order: index + 1 // Ensure order starts at 1
                         }));
+                    },
+
+                    dragStart(event, index) {
+                        this.draggedImage = this.previews[index];
+                        event.dataTransfer.effectAllowed = "move";
+                    },
+
+                    dragOver(event) {
+                        event.preventDefault(); // Allow drop
+                    },
+
+                    drop(event, index) {
+                        event.preventDefault();
+                        if (this.draggedImage) {
+                            let draggedIndex = this.previews.findIndex(img => img === this.draggedImage);
+
+                            // Remove dragged image and reinsert at new position
+                            this.previews.splice(draggedIndex, 1);
+                            this.previews.splice(index, 0, this.draggedImage);
+
+                            this.updateOrder();
+                            this.draggedImage = null;
+                        }
                     }
                 };
             }
