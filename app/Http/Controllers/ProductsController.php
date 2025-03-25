@@ -43,19 +43,21 @@ class ProductsController extends Controller
      */
     public function store(StoreProductsRequest $request)
     {
+
         $data = $request->validated();
         $data['active'] = $request->has('active') ? true : false;
         $product = Product::create($data);
 
-        if ($request->hasFile('files') && $product) {
-            $order = 1;
-            foreach ($request->file('files') as $file) {
+        if ($request->hasFile('files')) {
+            foreach ($request->file('files') as $index => $file) {
                 $path = $file->store('products', 'public');
+                $order = $request->post('image_orders')[$index] ?? ($index + 1);
+
                 $product_image = new ProductImage();
                 $product_image->product_id = $product->id;
                 $product_image->path = $path;
                 $product_image->user_id = Auth::id();
-                $product_image->show_order = $order++;
+                $product_image->show_order = $order;
                 $product_image->save();
             }
         }
@@ -136,7 +138,11 @@ class ProductsController extends Controller
             }
         }
 
-        return redirect()->back()->with('success_message', 'Product updated successfully!');
+        if ($request->save_exit) {
+            return redirect(route('products.index'))->with('success_message', 'Product added successfully!');
+        }
+
+        return redirect(route('products.edit', $product->id))->with('success_message', 'Product added successfully!');
     }
 
 
