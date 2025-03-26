@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\ProductImage;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
+use function Symfony\Component\Translation\t;
 
 class ProductsController extends Controller
 {
@@ -19,7 +20,7 @@ class ProductsController extends Controller
     {
         $title = 'Products';
         $user = Auth::user();
-        $products = Product::paginate(20);
+        $products = Product::orderBy('created_at', 'desc')->paginate(20);
 
         return view('products.index', compact('title', 'user', 'products'));
     }
@@ -74,7 +75,8 @@ class ProductsController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        $title = 'Product - ' . $product->id;
+        return view('products.show', compact('product', 'title'));
     }
 
     /**

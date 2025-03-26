@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\FirstSetupController;
+use App\Http\Controllers\LocationController;
 use App\Http\Controllers\ProductsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
@@ -30,7 +31,7 @@ Route::middleware(['auth', 'CheckTestAccount'])->group(function () {
 
     Route::prefix('/users')->group(function () {
         Route::resource('/', UserController::class)
-            ->parameters(['' => 'product'])
+            ->parameters(['' => 'user'])
             ->names([
                 'index' => 'users.index',
                 'edit' => 'users.edit',
@@ -39,6 +40,20 @@ Route::middleware(['auth', 'CheckTestAccount'])->group(function () {
                 'update' => 'users.update',
                 'store' => 'users.store',
                 'create' => 'users.create',
+            ]);
+    });
+
+    Route::prefix('/locations')->group(function () {
+        Route::resource('/', LocationController::class)
+            ->parameters(['' => 'location'])
+            ->names([
+                'index' => 'locations.index',
+                'edit' => 'locations.edit',
+                'destroy' => 'locations.destroy',
+                'show' => 'locations.show',
+                'update' => 'locations.update',
+                'store' => 'locations.store',
+                'create' => 'locations.create',
             ]);
     });
 });

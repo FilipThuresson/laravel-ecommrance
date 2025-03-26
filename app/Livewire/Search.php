@@ -17,10 +17,6 @@ class Search extends Component
         $this->width = $width;
     }
 
-    public function updatedSearch()
-    {
-    }
-
     public function render()
     {
         if($this->search == ''){

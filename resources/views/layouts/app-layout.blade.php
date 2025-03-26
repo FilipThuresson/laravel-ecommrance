@@ -40,6 +40,14 @@
                 </a>
             </li>
             @endif
+            @if(auth()->user()->can('manage locations'))
+                <li>
+                    <a href="{{ route('locations.index') }}" class="{{ request()->routeIs('locations.*') ? 'menu-active' : '' }} flex items-center">
+                        <i class="iconoir-map-pin text-xl"></i>
+                        Locations
+                    </a>
+                </li>
+            @endif
         </ul>
     </aside>
 
